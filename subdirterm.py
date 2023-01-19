@@ -10,7 +10,6 @@ optAbs = args[1] == "-abs"
 ## Absolute path
 if optAbs:
     os.chdir(args[2])
-    optAbs = True
 
 # Get command
 command = " ".join(args[3 if optAbs else 1:])
@@ -25,6 +24,7 @@ subdirectories = [d for d in os.listdir() if
 print("Running " + command + " from following directories:")
 print(subdirectories)
 
+# Loop
 for subdir in subdirectories:
     print("\n\n")
     print(subdir + ":\n")
