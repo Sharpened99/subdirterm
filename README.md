@@ -7,7 +7,7 @@ in subdirectories from a starting directory
 
 ## Usage
 ```
-python3 subdirterm <command>
+python3 subdirterm [-abs absolutePath] <command>
 ```
 
 ## Options
