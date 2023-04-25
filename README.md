@@ -17,6 +17,7 @@ If this option is not present, the starting directory is the current working dir
 
 ### File iteration
 `-f` Iterates through the file given by the argument starting with `file=` and replaces `§s` in the command with a line in the file
+
 ## Prerequisites
 
 - Python 3
