@@ -3,16 +3,16 @@ import sys
 
 
 # Functions
-def is_opt_abs(args: list[str]) -> bool:
+def is_opt_abs(args: list[str]) -> (bool, str):
     opt_abs: bool = args[1].startswith("-") and args[1].__contains__("a")
+    abs_path: str = ""
     if opt_abs:
         abs_path: str = ""
         for word in args[2:]:
             if word.startswith("path="):
                 abs_path: str = word.partition("=")[2]
                 break
-        os.chdir(abs_path)
-    return opt_abs
+    return opt_abs, abs_path
 
 
 def is_opt_file_iter(args: list[str]) -> (bool, str):
@@ -27,7 +27,10 @@ def is_opt_file_iter(args: list[str]) -> (bool, str):
     return opt_file_iter, path_file
 
 
-def run_in_subdirectories(command: str):
+def run_in_subdirectories(command: str, abs1: bool, abs_path: str):
+    if abs1:
+        os.chdir(abs_path)
+
     # Get working directory
     cwd: str = os.getcwd()
 
@@ -46,7 +49,10 @@ def run_in_subdirectories(command: str):
         os.system(command)
 
 
-def run_file_iter(command_from_args, path_file):
+def run_file_iter(command_from_args: str, path_file: str, abs1: str, abs_path: str):
+    if abs1:
+        os.chdir(abs_path)
+
     file = open(path_file)
     file_lines: list[str] = file.read().split("\n")
 
@@ -75,7 +81,7 @@ def main():
     # Options ---------------------------------------------
 
     # Absolute path
-    opt_abs = is_opt_abs(args)
+    opt_abs, abs_path = is_opt_abs(args)
 
     # File iteration
     opt_file_iter, file = is_opt_file_iter(args)
@@ -91,9 +97,9 @@ def main():
     command_from_args = " ".join(args[cmd_start_index:])
 
     if opt_file_iter:
-        run_file_iter(command_from_args, file)
+        run_file_iter(command_from_args, file, opt_abs, abs_path)
     else:
-        run_in_subdirectories(command_from_args)
+        run_in_subdirectories(command_from_args, opt_abs, abs_path)
 
     print("\n\nDone")
 
