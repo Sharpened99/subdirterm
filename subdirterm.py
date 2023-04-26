@@ -3,7 +3,7 @@ import sys
 
 
 # Functions
-def is_opt_args(args: list[str]) -> bool:
+def is_opt_abs(args: list[str]) -> bool:
     opt_abs: bool = args[1].startswith("-") and args[1].__contains__("a")
     if opt_abs:
         abs_path: str = ""
@@ -75,7 +75,7 @@ def main():
     # Options ---------------------------------------------
 
     # Absolute path
-    opt_abs = is_opt_args(args)
+    opt_abs = is_opt_abs(args)
 
     # File iteration
     opt_file_iter, file = is_opt_file_iter(args)
