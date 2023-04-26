@@ -42,7 +42,7 @@ def run_in_subdirectories(command: str, abs1: bool, abs_path: str):
     print(subdirectories)
     # Loop
     for subdir in subdirectories:
-        print("\n\n")
+        print("")
         print(subdir + ":\n")
 
         os.chdir(os.path.join(cwd, subdir))
@@ -62,7 +62,7 @@ def run_file_iter(command_from_args: str, path_file: str, abs1: str, abs_path: s
     print("Running iterations from file\n")
     print(file_lines)
     for line in file_lines:
-        print("\n")
+        print("")
         run_cmd = command_from_args.replace("§s", line)
         print("Running: ", run_cmd)
         os.system(run_cmd)
@@ -101,7 +101,7 @@ def main():
     else:
         run_in_subdirectories(command_from_args, opt_abs, abs_path)
 
-    print("\n\nDone")
+    print("\nDone")
 
 
 if __name__ == "__main__":
