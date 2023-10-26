@@ -1,34 +1,11 @@
 import os
 import sys
+import argparse
 
 
 # Functions
-def is_opt_abs(args: list[str]) -> (bool, str):
-    opt_abs: bool = args[1].startswith("-") and args[1].__contains__("a")
-    abs_path: str = ""
-    if opt_abs:
-        abs_path: str = ""
-        for word in args[2:]:
-            if word.startswith("path="):
-                abs_path: str = word.partition("=")[2]
-                break
-    return opt_abs, abs_path
-
-
-def is_opt_file_iter(args: list[str]) -> (bool, str):
-    opt_file_iter: bool = args[1].startswith("-") and args[1].__contains__("f")
-    path_file: str = ""
-    if opt_file_iter:
-        path_file: str = ""
-        for word in args[2:]:
-            if word.startswith("file="):
-                path_file = word.partition("=")[2]
-                break
-    return opt_file_iter, path_file
-
-
-def run_in_subdirectories(command: str, abs1: bool, abs_path: str):
-    if abs1:
+def run_in_subdirectories(command: str, abs_path: bool | str):
+    if abs_path:
         os.chdir(abs_path)
 
     # Get working directory
@@ -49,8 +26,8 @@ def run_in_subdirectories(command: str, abs1: bool, abs_path: str):
         os.system(command)
 
 
-def run_file_iter(command_from_args: str, path_file: str, abs1: str, abs_path: str):
-    if abs1:
+def run_file_iter(command_from_args: str, path_file: str, abs_path: bool | str):
+    if abs_path:
         os.chdir(abs_path)
 
     file = open(path_file)
@@ -68,41 +45,51 @@ def run_file_iter(command_from_args: str, path_file: str, abs1: str, abs_path: s
         os.system(run_cmd)
 
 
-def main():
-    # Get args ------------------------------------------------
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
 
-    args: list[str] = sys.argv
+    parser.add_argument(
+        "--abs", default=False, type=str,
+        help="Use absolute path for starting directory. Uses current working "
+             "directory otherwise."
+    )
+    parser.add_argument(
+        "--file", default=False, type=str,
+        help="Read list of strings from file and iterate through them. "
+             "Replaces '§s' in the command with line in file"
+    )
+    parser.add_argument(
+        "cmd", default="", type=str, nargs="+",
+        help="The command to run. Put the command in quotes to avoid args "
+             "like -a being interpreted as arguments for subdirterm."
+    )
+
+    return parser.parse_args()
+
+
+def main(args: argparse.Namespace):
     cmd_start_index: int = 1
-
-    if len(args) < 2:
-        print("Incorrect number of arguments: must be at least 2")
-        exit(1)
-
     # Options ---------------------------------------------
 
     # Absolute path
-    opt_abs, abs_path = is_opt_abs(args)
-
+    if args.abs:
+        print("Absolute path is:", args.abs)
     # File iteration
-    opt_file_iter, file = is_opt_file_iter(args)
-
-    # Index adjustment
-    if opt_abs or opt_file_iter:
-        cmd_start_index += 2
-        if opt_abs and opt_file_iter:
-            cmd_start_index += 1
+    if args.file:
+        print("file name:", args.file)
 
     # Execution
 
-    command_from_args = " ".join(args[cmd_start_index:])
+    command_from_args = " ".join(args.cmd)
 
-    if opt_file_iter:
-        run_file_iter(command_from_args, file, opt_abs, abs_path)
+    if args.file:
+        run_file_iter(command_from_args, args.file, args.abs)
     else:
-        run_in_subdirectories(command_from_args, opt_abs, abs_path)
+        run_in_subdirectories(command_from_args, args.abs)
 
-    print("\nDone")
+    print("\nDone\n")
 
 
 if __name__ == "__main__":
-    main()
+    parsed_args = parse_args()
+    main(parsed_args)

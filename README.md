@@ -7,16 +7,16 @@ in subdirectories from a starting directory
 
 ## Usage
 ```
-python3 subdirterm [-<options>] <command>
+subdirterm.py [-h] [--abs ABS] [--file FILE] cmd [cmd ...]
 ```
 
 ## Options
 ### Absoulute path
-If the option `-a` is used, there must be an argument starting with `path=` giving an absolute path to the starting directory.
+If the option `--abs` is used, `ABS` denotes the absolute path to the starting directory the script will be executing from.
 If this option is not present, the starting directory is the current working directory.
 
 ### File iteration
-If the option `-f` is used, the script will run through the lines of the file pointed to by the argument starting with `file=` and replace `§s` with the current line
+If the option `--file` is used, the script will iterate through the lines of the file named by `FILE` and replace `§s` in the command with the current line.
 
 ## Prerequisites
 
