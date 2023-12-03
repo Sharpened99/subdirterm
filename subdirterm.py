@@ -4,7 +4,14 @@ import argparse
 
 
 # Functions
-def run_in_subdirectories(command: str, abs_path: bool | str):
+def run_in_subdirectories(command: str, abs_path: bool | str) -> None:
+    """
+    Runs command in subdirectories found under abs_path if abs_path option is
+    used. Otherwise, uses current working directory as starting point
+    :param command: command to run
+    :param abs_path: the absolute path to the starting point
+            if abs_path option is used
+    """
     if abs_path:
         os.chdir(abs_path)
 
@@ -26,7 +33,15 @@ def run_in_subdirectories(command: str, abs_path: bool | str):
         os.system(command)
 
 
-def run_file_iter(command_from_args: str, path_file: str, abs_path: bool | str):
+def run_file_iter(command_from_args: str, path_file: str, abs_path: bool | str) -> None:
+    """
+    Runs the command while replacing "§s" with a line from
+    the file pointed to by path_file.
+    :param command_from_args: the command to run
+    :param path_file: path to the file with the replacement pattern
+    :param abs_path: If the abs_path option is used, first navigates to the path
+            pointed to by abs_path. Otherwise, use current working directory.
+    """
     if abs_path:
         os.chdir(abs_path)
 
@@ -46,6 +61,10 @@ def run_file_iter(command_from_args: str, path_file: str, abs_path: bool | str):
 
 
 def parse_args() -> argparse.Namespace:
+    """
+    parse args given from CLI
+    :return:
+    """
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
